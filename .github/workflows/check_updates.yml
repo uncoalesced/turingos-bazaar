@@ -1,0 +1,54 @@
+# Engineered by uncoalesced
+name: Upstream Version Monitor
+
+on:
+  schedule:
+    - cron: '0 6 * * 1' # Every Monday at 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-and-create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and jq
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y jq curl openssl
+
+      - name: Run Upstream Version Check
+        run: |
+          chmod +x scripts/check_updates.sh scripts/build_index.sh scripts/sign_index.sh
+          ./scripts/check_updates.sh
+        env:
+          BAZAAR_SIGNING_KEY: ${{ secrets.BAZAAR_SIGNING_KEY }}
+
+      - name: Create Pull Request if Updates Found
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore(deps): update bazaar packages to latest upstream versions"
+          title: "chore(deps): update bazaar packages to latest upstream versions"
+          body: |
+            ### Automated Upstream Release Updates
+
+            The upstream release monitor detected new releases for pinned Bazaar entries.
+
+            #### Changes:
+            See committed entry files and `update_summary.md`.
+
+            > Note: All package releases have been pinned with new versions and verified upstream SHA-256 tarball checksums.
+          branch: "bazaar-upstream-updates"
+          delete-branch: true
+          labels: |
+            dependencies
+            bazaar

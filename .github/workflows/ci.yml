@@ -35,6 +35,13 @@ jobs:
           test -f dist/v1/index.json || { echo "dist/v1/index.json missing"; exit 1; }
           jq . dist/v1/index.json > /dev/null
 
+      - name: Sign Index with Ed25519
+        run: |
+          chmod +x scripts/sign_index.sh
+          ./scripts/sign_index.sh
+        env:
+          BAZAAR_SIGNING_KEY: ${{ secrets.BAZAAR_SIGNING_KEY }}
+
       - name: Setup Pages
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/configure-pages@v4

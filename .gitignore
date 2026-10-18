@@ -1,4 +1,6 @@
 dist/
 *.log
+*.key
+keys/*.key
 .DS_Store
 Thumbs.db
