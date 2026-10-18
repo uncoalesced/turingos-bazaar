@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "id": "postgres-mcp",
+  "name": "Postgres Inspector",
+  "type": "mcp",
+  "version": "0.6.2",
+  "description": "Let Claude query and inspect a Postgres database",
+  "verified": true,
+  "tags": [
+    "database",
+    "postgres",
+    "sql"
+  ],
+  "repo": "modelcontextprotocol/servers",
+  "subdir": "src/postgres",
+  "env_required": [
+    "POSTGRES_CONNECTION_STRING"
+  ],
+  "install": {
+    "runtime": "npx",
+    "package": "@modelcontextprotocol/server-postgres",
+    "version": "0.6.2",
+    "sha256": "af55200a01b13ae31949fb4a8864ee6043b891d00ff83330d1779b18aa5ba26f",
+    "mcp_command": "npx",
+    "mcp_args": [
+      "-y",
+      "@modelcontextprotocol/server-postgres",
+      "${POSTGRES_CONNECTION_STRING}"
+    ]
+  }
+}

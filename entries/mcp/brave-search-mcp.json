@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "brave-search-mcp",
+  "name": "Brave Search MCP",
+  "type": "mcp",
+  "version": "0.6.2",
+  "description": "Web and local search via Brave Search API",
+  "verified": true,
+  "tags": [
+    "search",
+    "web",
+    "brave"
+  ],
+  "repo": "modelcontextprotocol/servers",
+  "subdir": "src/brave-search",
+  "env_required": [
+    "BRAVE_API_KEY"
+  ],
+  "install": {
+    "runtime": "npx",
+    "package": "@modelcontextprotocol/server-brave-search",
+    "version": "0.6.2",
+    "sha256": "91733a4e1e0c0de6738d3542135c40bd4356aa48a336191c855e4f9feac40f85",
+    "mcp_command": "npx",
+    "mcp_args": [
+      "-y",
+      "@modelcontextprotocol/server-brave-search"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "id": "github-mcp",
+  "name": "GitHub MCP Server",
+  "type": "mcp",
+  "version": "2025.4.8",
+  "description": "Manage PRs, issues, and repos via Claude",
+  "verified": true,
+  "tags": [
+    "git",
+    "github",
+    "pr",
+    "issues"
+  ],
+  "repo": "modelcontextprotocol/servers",
+  "subdir": "src/github",
+  "env_required": [
+    "GITHUB_PERSONAL_ACCESS_TOKEN"
+  ],
+  "install": {
+    "runtime": "npx",
+    "package": "@modelcontextprotocol/server-github",
+    "version": "2025.4.8",
+    "sha256": "1d5b1bca9305adf0c8055131f2286514c9bea6eb31100460899a1ed9ffece5c1",
+    "mcp_command": "npx",
+    "mcp_args": [
+      "-y",
+      "@modelcontextprotocol/server-github"
+    ]
+  }
+}

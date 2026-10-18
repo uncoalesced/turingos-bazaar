@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://turingos.ai/schemas/bazaar-entry.schema.json",
+  "title": "BazaarEntry",
+  "description": "Engineered by uncoalesced. Metadata and installation manifest for a TuringOS Bazaar entry (MCP server, Skill, or Plugin).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "name",
+    "type",
+    "version",
+    "description",
+    "verified",
+    "tags",
+    "install"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Unique kebab-case identifier for the tool/skill/plugin"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Display name of the tool"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["mcp", "skill", "plugin"],
+      "description": "Type of extension: MCP server, Claude Code skill, or Claude Code plugin"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+(\\.\\d+)*(-[a-zA-Z0-9.]+)?$",
+      "description": "Pinned version matching upstream release"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Description of functionality and use cases"
+    },
+    "verified": {
+      "type": "boolean",
+      "description": "Whether the entry has been verified by the TuringOS core team"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "repo": {
+      "type": "string",
+      "description": "Upstream source repository (e.g. org/repo)"
+    },
+    "subdir": {
+      "type": "string",
+      "description": "Subdirectory within the source repository if applicable"
+    },
+    "env_required": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true,
+      "default": []
+    },
+    "install": {
+      "type": "object",
+      "required": [
+        "runtime",
+        "package",
+        "version",
+        "sha256"
+      ],
+      "properties": {
+        "runtime": {
+          "type": "string",
+          "enum": ["npx", "pip", "cargo", "git", "archive"]
+        },
+        "package": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 checksum of upstream release archive/tarball"
+        },
+        "mcp_command": {
+          "type": "string"
+        },
+        "mcp_args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

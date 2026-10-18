@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "id": "memory-mcp",
+  "name": "Memory MCP Server",
+  "type": "mcp",
+  "version": "1.0.0",
+  "description": "Persistent knowledge graph memory for Claude across sessions",
+  "verified": true,
+  "tags": [
+    "memory",
+    "persistence",
+    "knowledge"
+  ],
+  "repo": "modelcontextprotocol/servers",
+  "subdir": "src/memory",
+  "env_required": [],
+  "install": {
+    "runtime": "npx",
+    "package": "@modelcontextprotocol/server-memory",
+    "version": "1.0.0",
+    "sha256": "22547eddb9544b54c3db39e4c0ff87232d4fd18b09410c118616531c4c08a370",
+    "mcp_command": "npx",
+    "mcp_args": [
+      "-y",
+      "@modelcontextprotocol/server-memory"
+    ]
+  }
+}
