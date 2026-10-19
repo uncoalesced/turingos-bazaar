@@ -1,0 +1,197 @@
+#!/usr/bin/env node
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+import { readFileSync } from 'node:fs';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const pkg = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf8'));
+
+// Lazy imports to keep startup fast
+const { ui } = await import('../src/ui.js');
+
+const argv = process.argv.slice(2);
+const opts = { yes: false, dryRun: false, allClients: false, client: null, category: null };
+const positionals = [];
+for (let i = 0; i < argv.length; i++) {
+  const a = argv[i];
+  if (a === '--yes' || a === '-y') opts.yes = true;
+  else if (a === '--dry-run') opts.dryRun = true;
+  else if (a === '--all-clients') opts.allClients = true;
+  else if (a === '--client') { opts.client = argv[++i]; }
+  else if (a === '--category') { opts.category = argv[++i]; }
+  else if (a === '--version' || a === '-v') { console.log(pkg.version); process.exit(0); }
+  else if (a === '--help' || a === '-h') { help(); process.exit(0); }
+  else if (a.startsWith('--client=')) opts.client = a.slice('--client='.length);
+  else if (a.startsWith('--category=')) opts.category = a.slice('--category='.length);
+  else positionals.push(a);
+}
+
+function help() {
+  console.log(`mcp-bazaar ${pkg.version} — MCP Bazaar CLI`);
+  console.log('');
+  console.log('Usage: mcp-bazaar [command] [args] [options]');
+  console.log('');
+  console.log('Commands:');
+  console.log('  (none) / browse          Browse available servers');
+  console.log('  search <query>           Search the registry');
+  console.log('  list [--category X]      List servers');
+  console.log('  info <id>                Show server details');
+  console.log('  install <id>             Install + register with clients');
+  console.log('  uninstall <id>           Remove from clients + state');
+  console.log('  installed                List installed servers');
+  console.log('  clients                  Show detected MCP clients');
+  console.log('  export <id>              Print MCP config snippet');
+  console.log('  validate                 Validate registry.json');
+  console.log('');
+  console.log('Options:');
+  console.log('  --client <name>          Target a single client');
+  console.log('  --all-clients            Target every detected client');
+  console.log('  --category <name>        Filter by category');
+  console.log('  --yes, -y                Accept prompts');
+  console.log('  --dry-run                Print without writing');
+  console.log('  --version, -v            Print version');
+  console.log('  --help, -h               Show help');
+}
+
+const cmd = positionals[0] || 'browse';
+
+async function main() {
+  switch (cmd) {
+    case 'browse':
+    case 'list': {
+      const { allServers, searchServers, filterByCategory } = await import('../src/registry.js');
+      const { isInstalled } = await import('../src/state.js');
+      let servers = allServers();
+      if (opts.category) servers = filterByCategory(opts.category);
+      if (positionals[1]) servers = searchServers(positionals.slice(1).join(' '));
+      ui.header('MCP Bazaar');
+      for (const s of servers) {
+        const dot = isInstalled(s.id) ? '\x1b[32m●\x1b[0m' : '\x1b[2m○\x1b[0m';
+        console.log(`  ${dot}  \x1b[1m${s.name.padEnd(22)}\x1b[0m  \x1b[2m[${s.category}]\x1b[0m`);
+        console.log(`       ${s.description}`);
+        console.log(`       \x1b[2m${s.id}  tags: ${(s.tags || []).join(', ')}\x1b[0m`);
+        console.log('');
+      }
+      console.log(`  \x1b[2m${servers.length} server(s). Install: mcp-bazaar install <id>\x1b[0m`);
+      break;
+    }
+    case 'search': {
+      const q = positionals.slice(1).join(' ');
+      if (!q) { ui.fail('Usage: mcp-bazaar search <query>'); process.exit(1); }
+      const { searchServers } = await import('../src/registry.js');
+      const { isInstalled } = await import('../src/state.js');
+      const res = searchServers(q);
+      ui.header(`Search: ${q}`);
+      if (!res.length) { ui.info('No servers matched.'); break; }
+      for (const s of res) {
+        const dot = isInstalled(s.id) ? '\x1b[32m●\x1b[0m' : '\x1b[2m○\x1b[0m';
+        console.log(`  ${dot}  \x1b[1m${s.name}\x1b[0m  \x1b[2m${s.id}\x1b[0m`);
+        console.log(`     ${s.description}`);
+        console.log('');
+      }
+      ui.info(`${res.length} result(s).`);
+      break;
+    }
+    case 'info': {
+      const id = positionals[1];
+      if (!id) { ui.fail('Usage: mcp-bazaar info <id>'); process.exit(1); }
+      const { getServer } = await import('../src/registry.js');
+      const { isInstalled } = await import('../src/state.js');
+      const s = getServer(id);
+      if (!s) { ui.fail(`Server not found: ${id}`); process.exit(1); }
+      ui.header(s.name);
+      ui.label('ID', s.id);
+      ui.label('Category', s.category);
+      ui.label('Author', s.author || '-');
+      ui.label('Runtime', s.runtime);
+      ui.label('Package', s.package || '-');
+      ui.label('Version', s.version || '-');
+      ui.label('License', s.license || '-');
+      ui.label('Verified', s.verified ? 'yes' : 'no');
+      ui.label('Homepage', s.homepage || '-');
+      if (s.tags && s.tags.length) ui.label('Tags', s.tags.join(', '));
+      if (s.env && Object.keys(s.env).length) {
+        console.log('');
+        ui.warn('Required environment variables:');
+        for (const [k, meta] of Object.entries(s.env)) {
+          const set = !!process.env[k];
+          console.log(`    ${k.padEnd(34)} ${set ? '\x1b[32m(set)\x1b[0m' : '\x1b[31m(NOT SET)\x1b[0m'}  ${meta.description}`);
+        }
+      }
+      console.log('');
+      ui.label('Status', isInstalled(id) ? 'installed' : 'not installed');
+      if (!isInstalled(id)) ui.info(`Install: mcp-bazaar install ${id}`);
+      break;
+    }
+    case 'install': {
+      const id = positionals[1];
+      if (!id) { ui.fail('Usage: mcp-bazaar install <id>'); process.exit(1); }
+      const { install } = await import('../src/install.js');
+      const ok = await install(id, opts);
+      process.exit(ok ? 0 : 1);
+    }
+    case 'uninstall': {
+      const id = positionals[1];
+      if (!id) { ui.fail('Usage: mcp-bazaar uninstall <id>'); process.exit(1); }
+      const { uninstall } = await import('../src/install.js');
+      await uninstall(id, opts);
+      break;
+    }
+    case 'installed': {
+      const { installedIds } = await import('../src/state.js');
+      const { getServer } = await import('../src/registry.js');
+      const ids = installedIds();
+      ui.header('Installed Servers');
+      if (!ids.length) { ui.info('No servers installed yet.'); break; }
+      for (const id of ids) {
+        const s = getServer(id);
+        console.log(`  \x1b[32m●\x1b[0m  ${(s ? s.name : id).padEnd(24)}  \x1b[2m${id}\x1b[0m`);
+      }
+      console.log('');
+      break;
+    }
+    case 'clients': {
+      const { CLIENTS, detectedClients, clientConfigPath, isClientInstalled } = await import('../src/clients.js');
+      ui.header('MCP Clients');
+      for (const c of CLIENTS) {
+        const det = isClientInstalled(c);
+        const sym = det ? '\x1b[32m●\x1b[0m' : '\x1b[2m○\x1b[0m';
+        console.log(`  ${sym}  ${c.name.padEnd(16)} ${clientConfigPath(c)}`);
+      }
+      console.log('');
+      ui.info(`Detected: ${detectedClients().map((c) => c.id).join(', ') || 'none'}`);
+      break;
+    }
+    case 'export': {
+      const id = positionals[1];
+      if (!id) { ui.fail('Usage: mcp-bazaar export <id>'); process.exit(1); }
+      const { getServer } = await import('../src/registry.js');
+      const { buildMcpEntry } = await import('../src/runtimes.js');
+      const s = getServer(id);
+      if (!s) { ui.fail(`Server not found: ${id}`); process.exit(1); }
+      const entry = buildMcpEntry(s, {});
+      console.log(JSON.stringify({ mcpServers: { [id]: entry } }, null, 2));
+      break;
+    }
+    case 'validate': {
+      const { loadRegistry, validateRegistry } = await import('../src/registry.js');
+      const { REGISTRY_PATH } = await import('../src/registry.js');
+      const data = loadRegistry();
+      const errs = validateRegistry(data);
+      if (errs.length) {
+        ui.fail(`${errs.length} validation error(s):`);
+        for (const e of errs) console.log(`    - ${e}`);
+        process.exit(1);
+      } else {
+        ui.ok(`Registry valid: ${data.servers.length} servers`);
+      }
+      break;
+    }
+    default:
+      ui.fail(`Unknown command: ${cmd}`);
+      help();
+      process.exit(1);
+  }
+}
+
+main().catch((e) => { ui.fail(e && e.message ? e.message : String(e)); process.exit(1); });

@@ -1,0 +1,50 @@
+:root { --bg:#0b0d10; --surface:#14171c; --line:#262a31; --text:#e6e8eb; --muted:#9aa1ab; --accent:#7c5cff; --accent2:#3dd68c; }
+* { box-sizing:border-box; }
+body { margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--text); }
+.top { position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; gap:12px; align-items:center; padding:14px 24px; background:color-mix(in srgb,var(--bg) 85%,transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+.brand { display:flex; align-items:center; gap:10px; font-weight:600; }
+.brand-tile { display:grid; place-items:center; width:30px; height:30px; border-radius:8px; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; font-weight:700; }
+.search { flex:1; min-width:200px; }
+.search input { width:100%; padding:8px 12px; border-radius:8px; border:1px solid var(--line); background:var(--surface); color:var(--text); font:inherit; }
+.cats { display:flex; gap:6px; flex-wrap:wrap; }
+.cat { padding:6px 12px; border-radius:999px; border:1px solid var(--line); background:transparent; color:var(--muted); cursor:pointer; font:inherit; font-size:13px; }
+.cat.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+main { max-width:1180px; margin:0 auto; padding:24px; }
+.hero { padding:32px 0 16px; }
+.hero h1 { font-size:36px; margin:0 0 6px; letter-spacing:-0.02em; }
+.hero p { color:var(--muted); margin:0 0 12px; }
+.install-cmd { display:inline-block; padding:8px 12px; border-radius:8px; background:var(--surface); border:1px solid var(--line); font-family:ui-monospace,monospace; font-size:13px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; margin-top:20px; }
+.card { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:10px; transition:transform .15s; }
+.card:hover { transform:translateY(-2px); }
+.card-head { display:flex; gap:12px; align-items:center; }
+.tile { display:grid; place-items:center; width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,var(--accent),#5a45d6); color:#fff; font-weight:700; font-size:18px; flex:none; }
+.card-info h3 { margin:0; font-size:16px; }
+.desc { margin:2px 0 0; color:var(--muted); font-size:13px; line-height:1.4; }
+.card-meta { display:flex; gap:6px; flex-wrap:wrap; }
+.badge { font-size:11px; padding:2px 8px; border-radius:999px; background:#1f232a; color:var(--muted); }
+.badge.verified { background:#123322; color:var(--accent2); }
+.badge.featured { background:#2a2040; color:#b39cff; }
+.tags { display:flex; gap:4px; flex-wrap:wrap; }
+.tag { font-size:11px; padding:2px 6px; border-radius:6px; background:#1a1d22; color:var(--muted); }
+.card-foot { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:auto; }
+.card-foot code { font-size:11px; color:var(--muted); font-family:ui-monospace,monospace; }
+.btn { padding:6px 14px; border-radius:8px; border:0; background:var(--accent); color:#fff; cursor:pointer; font:inherit; font-size:13px; font-weight:600; }
+.empty { text-align:center; color:var(--muted); padding:40px; }
+footer { text-align:center; color:var(--muted); padding:24px; font-size:13px; }
+footer a { color:var(--accent); }
+dialog { border:0; border-radius:16px; background:var(--surface); color:var(--text); padding:0; max-width:560px; width:90%; }
+dialog::backdrop { background:rgb(0 0 0 / .6); }
+.modal-card { padding:24px; position:relative; }
+.close { position:absolute; top:10px; right:14px; background:none; border:0; color:var(--muted); font-size:24px; cursor:pointer; }
+.modal-card h2 { margin:0 0 6px; }
+.mDesc { color:var(--muted); margin:0 0 14px; }
+.mMeta { display:grid; gap:4px; margin-bottom:14px; }
+.meta-row { display:flex; justify-content:space-between; font-size:13px; padding:4px 0; border-bottom:1px solid var(--line); }
+.mk { color:var(--muted); }
+.mEnv h4 { margin:0 0 6px; font-size:13px; }
+.env-row { display:flex; flex-direction:column; gap:2px; padding:6px 0; border-bottom:1px solid var(--line); }
+.env-row code { font-size:12px; color:var(--accent2); }
+.mInstall { display:flex; gap:8px; align-items:center; margin-top:14px; }
+.mInstall code { flex:1; padding:8px 10px; background:var(--bg); border:1px solid var(--line); border-radius:8px; font-family:ui-monospace,monospace; font-size:12px; overflow:auto; }
+.mInstall button { padding:8px 14px; border-radius:8px; border:0; background:var(--accent); color:#fff; cursor:pointer; font-weight:600; }

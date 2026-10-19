@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/uncoalesced/turingos-bazaar/registry/schema.json",
+  "title": "MCP Bazaar Registry",
+  "type": "object",
+  "required": ["version", "servers"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "updated": { "type": "string", "format": "date" },
+    "servers": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/server" }
+    }
+  },
+  "$defs": {
+    "server": {
+      "type": "object",
+      "required": ["id", "name", "description", "category", "runtime", "command"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "category": { "type": "string", "enum": ["developer-tools", "data", "web", "productivity", "ai", "communication", "storage", "other"] },
+        "tags": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "author": { "type": "string" },
+        "homepage": { "type": "string", "format": "uri" },
+        "repository": { "type": "string" },
+        "subdir": { "type": "string" },
+        "license": { "type": "string" },
+        "version": { "type": "string" },
+        "runtime": { "type": "string", "enum": ["npx", "pip", "cargo", "git", "docker", "binary"] },
+        "package": { "type": "string" },
+        "command": { "type": "string", "minLength": 1 },
+        "args": { "type": "array", "items": { "type": "string" } },
+        "env": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["description"],
+            "additionalProperties": false,
+            "properties": {
+              "required": { "type": "boolean" },
+              "description": { "type": "string" },
+              "example": { "type": "string" }
+            }
+          }
+        },
+        "verified": { "type": "boolean" },
+        "featured": { "type": "boolean" },
+        "minClientVersion": { "type": "string" }
+      }
+    }
+  }
+}
