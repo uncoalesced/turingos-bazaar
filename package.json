@@ -1,0 +1,38 @@
+{
+  "name": "turingos-bazaar",
+  "version": "0.1.0",
+  "description": "An MCP (Model Context Protocol) bazaar: browse, install and register MCP servers into Claude Code, Cursor, Windsurf, Continue and Cline.",
+  "type": "module",
+  "bin": {
+    "mcp-bazaar": "bin/mcp-bazaar",
+    "turingos-bazaar": "bin/mcp-bazaar"
+  },
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node bin/mcp-bazaar",
+    "test": "node --test tests/*.test.js",
+    "lint": "node --check bin/mcp-bazaar && for f in src/*.js scripts/*.js; do node --check \"$f\"; done",
+    "validate": "node scripts/validate-registry.js",
+    "build:web": "node scripts/build-web.js",
+    "prepare": "npm run build:web"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "cursor",
+    "windsurf",
+    "bazaar",
+    "registry"
+  ],
+  "author": "uncoalesced",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/uncoalesced/turingos-bazaar.git"
+  },
+  "homepage": "https://uncoalesced.github.io/turingos-bazaar/"
+}

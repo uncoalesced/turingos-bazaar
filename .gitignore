@@ -1,6 +1,15 @@
+# Dependencies & outputs
+node_modules/
 dist/
-*.log
+coverage/
+web/registry.json
+web/v1/
+
+# Secrets & signatures
 *.key
 keys/*.key
+
+# Logs & temp files
+*.log
 .DS_Store
 Thumbs.db

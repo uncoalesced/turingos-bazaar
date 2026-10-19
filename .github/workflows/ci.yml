@@ -1,5 +1,5 @@
 # Engineered by uncoalesced
-name: Bazaar CI & Pages Publish
+name: CI
 
 on:
   push:
@@ -10,20 +10,27 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 
 jobs:
-  validate-and-build:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+      - run: npm test
+      - run: npm run validate
+      - run: npm run build:web
+
+  validate-and-sign:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Validate Entries and Build Index
         run: |
           sudo apt-get update -qq && sudo apt-get install -y jq
@@ -41,25 +48,3 @@ jobs:
           ./scripts/sign_index.sh
         env:
           BAZAAR_SIGNING_KEY: ${{ secrets.BAZAAR_SIGNING_KEY }}
-
-      - name: Setup Pages
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        uses: actions/configure-pages@v4
-
-      - name: Upload Artifact
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: 'dist'
-
-  deploy:
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    needs: validate-and-build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4

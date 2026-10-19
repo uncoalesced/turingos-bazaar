@@ -1,48 +1,64 @@
-<!-- Engineered by uncoalesced -->
-# TuringOS Bazaar (`turingos-bazaar`)
+# turingos-bazaar
 
-The official catalog and registry for the TuringOS Bazaar, hosting Model Context Protocol (MCP) servers, Claude Code skills, and Claude Code plugins.
+An **MCP (Model Context Protocol) Bazaar**: a curated registry of MCP servers plus a
+zero-dependency CLI and a browseable web catalogue. Install any server into Claude Code,
+Cursor, Windsurf, Continue and Cline with one command.
 
-This repository is **metadata-only**: entries contain installation instructions, dependency specifications, pinned versions, and upstream cryptographic checksums (SHA-256). Binary artifacts remain hosted at their authoritative upstream registries (npm, PyPI, Crates.io, GitHub).
+> This repo is the standalone home of the bazaar that ships inside
+> [TuringOS](https://github.com/uncoalesced/TuringOS). It works on its own — no TuringOS required.
 
----
+## Quick start
 
-## Catalog Feed
+```bash
+# Run without installing
+npx turingos-bazaar search github
 
-The compiled index is published automatically to GitHub Pages:
-- **v1 Index:** `https://uncoalesced.github.io/turingos-bazaar/v1/index.json`
-
----
-
-## Repository Structure
-
-```text
-turingos-bazaar/
-├── .github/
-│   └── workflows/
-│       └── ci.yml               # Validates schema and publishes GitHub Pages
-├── entries/
-│   ├── mcp/                     # Model Context Protocol servers
-│   ├── skill/                   # Claude Code skills
-│   └── plugin/                  # Claude Code plugins
-├── schema/
-│   └── bazaar-entry.schema.json # JSON Schema for catalog entries
-├── scripts/
-│   └── build_index.sh           # Compiles entries into v1/index.json
-└── README.md
+# Or install globally
+npm i -g turingos-bazaar
+mcp-bazaar browse
 ```
 
----
+## CLI
 
-## Contributing an Entry
+```bash
+mcp-bazaar                      # browse (fzf-like list)
+mcp-bazaar search <query>       # search registry
+mcp-bazaar info <id>            # details for a server
+mcp-bazaar install <id>         # install + register with detected clients
+mcp-bazaar uninstall <id>       # remove from clients + local state
+mcp-bazaar installed            # list installed servers
+mcp-bazaar clients              # show detected MCP clients & config paths
+mcp-bazaar export <id>          # print the MCP config snippet
+mcp-bazaar validate             # validate registry.json (contributors)
+```
 
-1. Create a JSON manifest in `entries/<type>/<id>.json` following `schema/bazaar-entry.schema.json`.
-2. Ensure the entry specifies:
-   - `id`: Unique kebab-case identifier
-   - `name`: Human-readable title
-   - `type`: `mcp`, `skill`, or `plugin`
-   - `version`: SemVer string matching upstream release
-   - `install.sha256`: Exact SHA-256 checksum of the upstream release tarball/archive
-   - `env_required`: Array of required environment variables (e.g. API keys)
-3. Run `bash scripts/build_index.sh` to verify compilation.
-4. Open a pull request against `main`. All PRs undergo schema validation and cryptographic verification in CI, followed by human maintainer review.
+Useful flags:
+
+- `--client <name>` — target a single client (`claude-code`, `cursor`, `windsurf`, `continue`, `cline`).
+- `--all-clients` — register with every detected client.
+- `--yes` — accept prompts (useful in scripts/CI).
+- `--dry-run` — print what would change without writing.
+
+## Web catalogue
+
+A static site lives in `web/` and is published to GitHub Pages:
+https://uncoalesced.github.io/turingos-bazaar/
+
+## Registry
+
+The catalogue is `registry/registry.json`, validated against `registry/schema.json` by CI.
+Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## How install works
+
+1. Looks up the server in the registry.
+2. Checks required environment variables (prompts if missing).
+3. For `npx`/`pip`/`cargo` runtimes, verifies the toolchain; for `git`, clones and builds.
+4. Writes an entry under `mcpServers.<id>` in each target client's config file (atomic, mode 600).
+5. Records install state in `~/.mcp-bazaar/installed.json`.
+
+Nothing is sent anywhere; everything is local.
+
+## License
+
+MIT

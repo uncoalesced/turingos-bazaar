@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MCP Bazaar</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="brand-tile">M</span>
+    <span class="brand-name">MCP Bazaar</span>
+  </div>
+  <div class="search">
+    <input id="q" type="search" placeholder="Search servers, tags, categories…" autocomplete="off" />
+  </div>
+  <nav class="cats" id="cats"></nav>
+</header>
+<main>
+  <section class="hero">
+    <h1>Browse MCP servers</h1>
+    <p>Curated Model Context Protocol servers. Install any of them with one command.</p>
+    <code class="install-cmd">npx turingos-bazaar install &lt;id&gt;</code>
+  </section>
+  <div class="grid" id="grid"></div>
+  <p class="empty" id="empty" hidden>Nothing matches that yet.</p>
+</main>
+<dialog id="modal">
+  <article class="modal-card">
+    <button class="close" id="closeModal" aria-label="Close">×</button>
+    <h2 id="mName"></h2>
+    <p class="mDesc" id="mDesc"></p>
+    <div class="mMeta" id="mMeta"></div>
+    <div class="mEnv" id="mEnv"></div>
+    <div class="mInstall">
+      <code id="mCmd"></code>
+      <button id="copyCmd">Copy</button>
+    </div>
+  </article>
+</dialog>
+<footer>
+  <p>MCP Bazaar · <a href="https://github.com/uncoalesced/turingos-bazaar">GitHub</a> · MIT</p>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>
