@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-10-18T17:57:07Z",
+  "generated_at": "2026-10-26T12:08:13Z",
   "entries": {
     "brave-search-mcp": {
       "schema_version": 1,
@@ -37,7 +37,7 @@
       "id": "filesystem-mcp",
       "name": "Filesystem MCP Server",
       "type": "mcp",
-      "version": "1.0.0",
+      "version": "2.0.1",
       "description": "Give Claude structured read/write access to local directories",
       "verified": true,
       "tags": [
@@ -51,8 +51,8 @@
       "install": {
         "runtime": "npx",
         "package": "@modelcontextprotocol/server-filesystem",
-        "version": "1.0.0",
-        "sha256": "ca60ed89a0acdf91a77a54ba21b1c41ea62e801c360320877035fa20ec4909ae",
+        "version": "2.0.1",
+        "sha256": "29fc383a93c28e42eefa643abe4b1578ddeca3f4d430e6cd4c57f1ccf2e7c379",
         "mcp_command": "npx",
         "mcp_args": [
           "-y",
@@ -97,7 +97,7 @@
       "id": "memory-mcp",
       "name": "Memory MCP Server",
       "type": "mcp",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "description": "Persistent knowledge graph memory for Claude across sessions",
       "verified": true,
       "tags": [
@@ -111,8 +111,8 @@
       "install": {
         "runtime": "npx",
         "package": "@modelcontextprotocol/server-memory",
-        "version": "1.0.0",
-        "sha256": "22547eddb9544b54c3db39e4c0ff87232d4fd18b09410c118616531c4c08a370",
+        "version": "2.0.0",
+        "sha256": "1ffb8dc5396540b8449170bfa56a75d66a4f8a6a5cd2b13cf04c9cbbb8638ef1",
         "mcp_command": "npx",
         "mcp_args": [
           "-y",

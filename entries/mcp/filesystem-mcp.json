@@ -3,7 +3,7 @@
   "id": "filesystem-mcp",
   "name": "Filesystem MCP Server",
   "type": "mcp",
-  "version": "1.0.0",
+  "version": "2.0.1",
   "description": "Give Claude structured read/write access to local directories",
   "verified": true,
   "tags": [
@@ -17,8 +17,8 @@
   "install": {
     "runtime": "npx",
     "package": "@modelcontextprotocol/server-filesystem",
-    "version": "1.0.0",
-    "sha256": "ca60ed89a0acdf91a77a54ba21b1c41ea62e801c360320877035fa20ec4909ae",
+    "version": "2.0.1",
+    "sha256": "29fc383a93c28e42eefa643abe4b1578ddeca3f4d430e6cd4c57f1ccf2e7c379",
     "mcp_command": "npx",
     "mcp_args": [
       "-y",
