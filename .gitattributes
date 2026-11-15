@@ -1,0 +1,4 @@
+# The signed index is verified byte for byte: never let git rewrite its line endings.
+v1/index.json -text
+v1/index.json.sig -text
+web/v1/* -text
