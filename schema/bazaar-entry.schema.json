@@ -32,7 +32,11 @@
     },
     "type": {
       "type": "string",
-      "enum": ["mcp", "skill", "plugin"],
+      "enum": [
+        "mcp",
+        "skill",
+        "plugin"
+      ],
       "description": "Type of extension: MCP server, Claude Code skill, or Claude Code plugin"
     },
     "version": {
@@ -83,7 +87,13 @@
       "properties": {
         "runtime": {
           "type": "string",
-          "enum": ["npx", "pip", "cargo", "git", "archive"]
+          "enum": [
+            "npx",
+            "pip",
+            "cargo",
+            "git",
+            "archive"
+          ]
         },
         "package": {
           "type": "string"
@@ -104,6 +114,17 @@
           "items": {
             "type": "string"
           }
+        }
+      },
+      "additionalProperties": false
+    },
+    "requires": {
+      "type": "object",
+      "description": "What this entry needs from the host. turingos is the minimum TuringOS version that supports it.",
+      "properties": {
+        "turingos": {
+          "type": "string",
+          "pattern": "^d+(.d+)*$"
         }
       },
       "additionalProperties": false

@@ -16,6 +16,9 @@
   "env_required": [
     "POSTGRES_CONNECTION_STRING"
   ],
+  "requires": {
+    "turingos": "1.3"
+  },
   "install": {
     "runtime": "npx",
     "package": "@modelcontextprotocol/server-postgres",

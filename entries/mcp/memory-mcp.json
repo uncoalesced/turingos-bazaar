@@ -14,6 +14,9 @@
   "repo": "modelcontextprotocol/servers",
   "subdir": "src/memory",
   "env_required": [],
+  "requires": {
+    "turingos": "1.3"
+  },
   "install": {
     "runtime": "npx",
     "package": "@modelcontextprotocol/server-memory",
