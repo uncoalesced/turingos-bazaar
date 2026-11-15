@@ -16,6 +16,9 @@
   "env_required": [
     "BRAVE_API_KEY"
   ],
+  "requires": {
+    "turingos": "1.3"
+  },
   "install": {
     "runtime": "npx",
     "package": "@modelcontextprotocol/server-brave-search",

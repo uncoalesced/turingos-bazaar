@@ -48,8 +48,8 @@ function card(s) {
   const c = el('article', 'card');
   const head = el('div', 'card-head');
   const tile = el('span', 'tile');
-  tile.style.setProperty('--hue', hue(s.id));
   tile.textContent = s.name[0];
+  tile.setAttribute('aria-hidden', 'true');
   const info = el('div', 'card-info');
   info.append(el('h3', null, s.name));
   info.append(el('p', 'desc', s.description));
@@ -67,12 +67,6 @@ function card(s) {
   foot.append(cmd, btn);
   c.append(head, meta, tags, foot);
   return c;
-}
-
-function hue(id) {
-  let h = 0;
-  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) % 360;
-  return h;
 }
 
 function render() {
