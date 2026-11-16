@@ -1,0 +1,2 @@
+- **filesystem-mcp**: bumped `1.0.0` -> `2.3.0` (SHA-256: `2ead6cadf4d70577...`)
+- **memory-mcp**: bumped `1.0.0` -> `2.1.1` (SHA-256: `7ecacc53c27db709...`)
